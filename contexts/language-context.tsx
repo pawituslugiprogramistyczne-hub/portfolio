@@ -81,7 +81,7 @@ const translations = {
     // About Section
     "about.title": "O mnie",
     "about.paragraph1":
-      "Jestem pasjonatem programowania z parwie 5-letnim doświadczeniem w tworzeniu rozwiązań cyfrowych, które mają znaczenie. Moja podróż rozpoczęła się od Pythona, a od tego czasu rozszerzyłem się na full-stack development z nowoczesnymi frameworkami.",
+      "Jestem pasjonatem programowania z prawie 5-letnim doświadczeniem w tworzeniu rozwiązań cyfrowych, które mają znaczenie. Moja podróż rozpoczęła się od Pythona, a od tego czasu rozszerzyłem się na full-stack development z nowoczesnymi frameworkami.",
     "about.paragraph2":
       "Wierzę w pisanie czystego, łatwego w utrzymaniu kodu i tworzenie doświadczeń użytkownika, które są zarówno piękne, jak i funkcjonalne. Kiedy nie programuję, odkrywam nowe technologie lub przyczyniamy się do projektów open-source.",
     "about.fullStack": "Programowanie Full-Stack",
@@ -94,15 +94,9 @@ const translations = {
 
     // Projects Section
     "projects.title": "Wybrane Projekty",
-    "projects.ecommerce.title": "Platforma E-Commerce",
-    "projects.ecommerce.description":
-      "Pełne rozwiązanie e-commerce zbudowane z Next.js, integracją Stripe i bazą danych PostgreSQL.",
-    "projects.taskmanager.title": "Aplikacja Zarządzania Zadaniami",
-    "projects.taskmanager.description":
-      "Aplikacja do zarządzania zadaniami zespołowymi z aktualizacjami w czasie rzeczywistym i funkcjami współpracy.",
-    "projects.analytics.title": "Dashboard Analityczny",
-    "projects.analytics.description":
-      "Interaktywny dashboard do wizualizacji danych i analityki wykorzystujący Python i nowoczesne technologie webowe.",
+    "projects.tbd.title": "Projekt wkrótce",
+    "projects.tbd.description":
+      "Ekscytujący nowy projekt jest w drodze! Bądź na bieżąco z dalszymi szczegółami.",
     "projects.code": "Kod",
     "projects.live": "Demo",
 
