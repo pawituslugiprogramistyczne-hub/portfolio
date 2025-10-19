@@ -28,7 +28,7 @@ export default function Portfolio() {
     {
       titleKey: "projects.tbd.title",
       descriptionKey: "projects.tbd.description",
-      tech: ["None yet"],
+      tech: "projets.tbd.tech",
       github: "#",
       live: "#",
       gradient: "from-blue-500 to-green-500",
@@ -218,15 +218,15 @@ export default function Portfolio() {
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {project.tech.map((tech, techIndex) => (
+                      {
                         <Badge
-                          key={techIndex}
+                          key={0}
                           variant="outline"
                           className="text-xs border-slate-300 dark:border-slate-600"
                         >
-                          {tech}
+                          {t(project.tech)}
                         </Badge>
-                      ))}
+}
                     </div>
                     <div className="flex space-x-2">
                       <Button

@@ -48,6 +48,8 @@ const translations = {
     "projects.tbd.title": "Project Coming Soon",
     "projects.tbd.description":
       "An exciting new project is on the way! Stay tuned for more details.",
+    "projects.tbd.tech":
+      "None yet",
 
     "projects.code": "Code",
     "projects.live": "Live",
@@ -97,6 +99,8 @@ const translations = {
     "projects.tbd.title": "Projekt wkrótce",
     "projects.tbd.description":
       "Ekscytujący nowy projekt jest w drodze! Bądź na bieżąco z dalszymi szczegółami.",
+    "projects.tbd.tech":
+      "Jeszcze brak",
     "projects.code": "Kod",
     "projects.live": "Demo",
 
