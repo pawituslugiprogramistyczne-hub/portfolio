@@ -1,0 +1,27 @@
+{
+  "name": "Pawel Pokorski - Web Developer Portfolio",
+  "short_name": "Pawel Pokorski",
+  "description": "Professional web developer specializing in Python, JavaScript, and modern web technologies",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#8b5cf6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "apple touch icon"
+    }
+  ],
+  "categories": ["portfolio", "developer", "technology"],
+  "lang": "en-US",
+  "dir": "ltr"
+}
