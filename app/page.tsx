@@ -28,7 +28,7 @@ export default function Portfolio() {
     {
       titleKey: "projects.tbd.title",
       descriptionKey: "projects.tbd.description",
-      tech: "projets.tbd.tech",
+      tech: "projects.tbd.tech",
       github: "#",
       live: "#",
       gradient: "from-blue-500 to-green-500",
