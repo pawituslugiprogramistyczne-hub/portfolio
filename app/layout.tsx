@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://alexchen.dev",
+    url: "https://portfolio-red-nine-r65phxfzmr.vercel.app/",
     title: "Pawel Pokorski PawIT - Web Developer",
     description: "Professional web developer specializing in Python, JavaScript, and modern web technologies",
     siteName: "Pawel Pokorski Portfolio",
