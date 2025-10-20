@@ -9,7 +9,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageToggle } from "@/components/language-toggle"
 import { useLanguage } from "@/contexts/language-context"
 import { Logo } from "@/components/logo"
-import { LinkedInFeed } from "@/components/linkedin-feed"
+import { GitHubRepos } from "@/components/github-repos"
 
 export default function Portfolio() {
   const { t } = useLanguage()
@@ -174,7 +174,9 @@ export default function Portfolio() {
           </Card>
         </div>
       </section>
-
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 mb-20">
+        <GitHubRepos />
+      </section>
       {/* Skills Section */}
       <section
         id="skills"
@@ -194,16 +196,6 @@ export default function Portfolio() {
               </Badge>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* LinkedIn Feed */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-12">
-            {t("linkedin.title")}
-          </h2>
-          <LinkedInFeed />
         </div>
       </section>
 
