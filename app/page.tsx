@@ -27,12 +27,12 @@ export default function Portfolio() {
 
   const projects = [
     {
-      titleKey: "projects.tbd.title",
-      descriptionKey: "projects.tbd.description",
-      tech: "projects.tbd.tech",
-      github: "#",
-      live: "#",
-      gradient: "from-blue-500 to-green-500",
+      titleKey: "projects.quizGame.title",
+      descriptionKey: "projects.quizGame.description",
+      tech: "projects.quizGame.tech",
+      github: "https://github.com/pawituslugiprogramistyczne-hub/quiz-game",
+      live: "/quiz-game",
+      gradient: "from-indigo-500 via-blue-500 to-cyan-500",
     },
   ]
 
@@ -207,53 +207,53 @@ export default function Portfolio() {
           </h2>
           <div className="flex justify-center">
             <div className="grid grid-cols-1 gap-8 w-full max-w-[calc(100%-2rem)] md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
-              {projects.map((project, index) => (
-                <Card
-                  key={index}
-                  className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border-slate-200 dark:border-slate-700 hover:shadow-2xl transition-all duration-300 hover:scale-105 overflow-hidden w-full max-w-md mx-auto"
-                >
-                  <div className={`h-2 bg-gradient-to-r ${project.gradient}`}></div>
-                  <CardHeader>
-                    <CardTitle className="text-slate-900 dark:text-white">{t(project.titleKey)}</CardTitle>
-                    <CardDescription className="text-slate-600 dark:text-slate-300">
-                      {t(project.descriptionKey)}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {
-                        <Badge
-                          key={0}
-                          variant="outline"
-                          className="text-xs border-slate-300 dark:border-slate-600"
-                        >
+              {projects.map((project, index) => {
+                return (
+                  <Card
+                    key={index}
+                    className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border-slate-200 dark:border-slate-700 hover:shadow-2xl transition-all duration-300 hover:scale-105 overflow-hidden w-full max-w-md mx-auto"
+                  >
+                    <div className={`h-2 bg-gradient-to-r ${project.gradient}`} />
+                    <CardHeader>
+                      <CardTitle className="text-slate-900 dark:text-white">{t(project.titleKey)}</CardTitle>
+                      <CardDescription className="text-slate-600 dark:text-slate-300">
+                        {t(project.descriptionKey)}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        <Badge variant="outline" className="text-xs border-slate-300 dark:border-slate-600">
                           {t(project.tech)}
                         </Badge>
-}
-                    </div>
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex-1 border-blue-300 text-blue-600 hover:bg-blue-50 dark:border-blue-600 dark:text-blue-400 dark:hover:bg-blue-950 bg-transparent"
-                        disabled
-                      >
-                        <Github className="w-4 h-4 mr-2" />
-                        {t("projects.code")}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex-1 border-green-300 text-green-600 hover:bg-green-50 dark:border-green-600 dark:text-green-400 dark:hover:bg-green-950 bg-transparent"
-                        disabled
-                      >
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        {t("projects.live")}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                      </div>
+
+                      <div className="flex space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1 border-blue-300 text-blue-600 hover:bg-blue-50 dark:border-blue-600 dark:text-blue-400 dark:hover:bg-blue-950 bg-transparent"
+                          disabled={!project.github || project.github === "#"}
+                          onClick={() => project.github && window.open(project.github, "_blank")}
+                        >
+                          <Github className="w-4 h-4 mr-2" />
+                          {t("projects.code")}
+                        </Button>
+
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1 border-green-300 text-green-600 hover:bg-green-50 dark:border-green-600 dark:text-green-400 dark:hover:bg-green-950 bg-transparent"
+                          disabled={!project.live || project.live === "#"}
+                          onClick={() => project.live && (window.location.href = project.live)}
+                        >
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          {t("projects.live")}
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )
+              })}
             </div>
           </div>
         </div>

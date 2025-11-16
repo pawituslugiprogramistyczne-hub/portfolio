@@ -31,6 +31,14 @@ const config: Config = {
   				DEFAULT: 'hsl(var(--secondary))',
   				foreground: 'hsl(var(--secondary-foreground))'
   			},
+			'quiz-game-primary': {
+				DEFAULT: 'hsl(var(--quiz-game-primary))',
+				foreground: 'hsl(var(--quiz-game-primary-foreground))'
+			},
+        'quiz-game-secondary': {
+          DEFAULT: 'hsl(var(--quiz-game-secondary))',
+          foreground: 'hsl(var(--quiz-game-secondary-foreground))'
+        },
   			muted: {
   				DEFAULT: 'hsl(var(--muted))',
   				foreground: 'hsl(var(--muted-foreground))'
@@ -38,6 +46,10 @@ const config: Config = {
   			accent: {
   				DEFAULT: 'hsl(var(--accent))',
   				foreground: 'hsl(var(--accent-foreground))'
+  			},
+  			'quiz-accent': {
+  				DEFAULT: 'hsl(var(--quiz-accent))',
+  				foreground: 'hsl(var(--quiz-accent-foreground))'
   			},
   			destructive: {
   				DEFAULT: 'hsl(var(--destructive))',

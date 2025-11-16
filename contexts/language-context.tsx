@@ -15,6 +15,11 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 const translations = {
   en: {
+    // Quiz game project
+    "projects.quizGame.title": "Quiz Game",
+    "projects.quizGame.description": "A fast, responsive quiz game built with React and TypeScript. Includes dynamic questions and score tracking.",
+    "projects.quizGame.tech": "React · TypeScript · Tailwind CSS",
+
     // Navigation
     "nav.about": "About",
     "nav.skills": "Skills",
@@ -66,6 +71,11 @@ const translations = {
     "footer.and": "and",
   },
   pl: {
+    // Quiz game project
+    "projects.quizGame.title": "Gra Quiz",
+    "projects.quizGame.description": "Szybka, responsywna gra quizowa zbudowana w React i TypeScript. Z dynamicznymi pytaniami i śledzeniem punktów.",
+    "projects.quizGame.tech": "React · TypeScript · Tailwind CSS",
+
     // Navigation
     "nav.about": "O mnie",
     "nav.skills": "Umiejętności",
