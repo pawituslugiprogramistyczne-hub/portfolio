@@ -17,7 +17,7 @@ const translations = {
   en: {
     // Quiz game project
     "projects.quizGame.title": "Quiz Game",
-    "projects.quizGame.description": "A fast, responsive quiz game built with React and TypeScript. Includes dynamic questions and score tracking.",
+    "projects.quizGame.description": "A fast, responsive quiz game built with React and TypeScript. The game was created primarily for a birthday party fun with friends.",
     "projects.quizGame.tech": "React · TypeScript · Tailwind CSS",
 
     // Navigation
@@ -73,7 +73,7 @@ const translations = {
   pl: {
     // Quiz game project
     "projects.quizGame.title": "Gra Quiz",
-    "projects.quizGame.description": "Szybka, responsywna gra quizowa zbudowana w React i TypeScript. Z dynamicznymi pytaniami i śledzeniem punktów.",
+    "projects.quizGame.description": "Szybka, responsywna gra quizowa zbudowana w React i TypeScript. Gra stworzona typowo pod urodzinowa zabawe z znajomymi.",
     "projects.quizGame.tech": "React · TypeScript · Tailwind CSS",
 
     // Navigation
