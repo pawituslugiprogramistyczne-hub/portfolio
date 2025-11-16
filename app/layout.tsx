@@ -29,6 +29,14 @@ export const metadata: Metadata = {
     title: "Pawel Pokorski PawIT - Web Developer",
     description: "Professional web developer specializing in Python, JavaScript, and modern web technologies",
     siteName: "Pawel Pokorski Portfolio",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Pawel Pokorski – Portfolio",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",

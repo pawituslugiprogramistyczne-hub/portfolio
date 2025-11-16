@@ -4,6 +4,13 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
     darkMode: ["class"],
+   // ensure runtime-generated gradient classes and other dynamic classes are kept
+   safelist: [
+     { pattern: /^(from|via|to)-/ },
+     { pattern: /^bg-gradient-to-/ },
+     { pattern: /^text-/ },
+     { pattern: /^border-/ }
+   ],
     content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
