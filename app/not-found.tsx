@@ -1,43 +1,40 @@
 "use client"
 
 import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Home, ArrowLeft, Code } from "lucide-react"
+import { Wordmark } from "@/components/wordmark"
+import { useLanguage } from "@/contexts/language-context"
 
 export default function NotFound() {
+  const { t } = useLanguage()
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50 dark:from-purple-950 dark:via-blue-950 dark:to-cyan-950 flex items-center justify-center px-4">
-      <Card className="w-full max-w-md bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border-purple-200 dark:border-purple-700 shadow-xl">
-        <CardHeader className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 flex items-center justify-center">
-            <Code className="w-8 h-8 text-white" />
-          </div>
-          <CardTitle className="text-2xl bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-            404 - Page Not Found
-          </CardTitle>
-          <CardDescription className="text-slate-600 dark:text-slate-300">
-            The page you're looking for doesn't exist or has been moved.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Button
-              asChild
-              className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-            >
-              <Link href="/">
-                <Home className="w-4 h-4 mr-2" />
-                Go Home
-              </Link>
-            </Button>
-            <Button variant="outline" onClick={() => window.history.back()} className="flex-1">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Go Back
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    <main className="flex min-h-[100dvh] flex-col bg-slate-50 px-5 text-slate-900 dark:bg-slate-950 dark:text-slate-50 sm:px-8">
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center">
+        <Link href="/" aria-label="PawIT" className="rounded-lg text-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand">
+          <Wordmark />
+        </Link>
+      </div>
+      <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center pb-24">
+        <p className="font-mono text-sm text-brand">404</p>
+        <h1 className="mt-4 text-4xl font-semibold tracking-tighter md:text-6xl">{t("notFound.title")}</h1>
+        <p className="mt-6 max-w-[55ch] text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+          {t("notFound.description")}
+        </p>
+        <div className="mt-10">
+          <Button
+            asChild
+            size="lg"
+            className="h-12 rounded-full bg-brand px-7 text-base text-brand-foreground transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand/90 active:translate-y-0 active:scale-[0.98] focus-visible:ring-brand"
+          >
+            <Link href="/">
+              <ArrowLeft />
+              {t("notFound.home")}
+            </Link>
+          </Button>
+        </div>
+      </div>
+    </main>
   )
 }

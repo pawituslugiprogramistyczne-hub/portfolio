@@ -1,9 +1,10 @@
 "use client"
 import { useEffect, useState } from "react"
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Star, GitFork, ExternalLink, MessageSquare } from "lucide-react"
+import { ArrowUpRight, GitFork, Star } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Reveal } from "@/components/reveal"
+import { useLanguage } from "@/contexts/language-context"
+import { profile } from "@/lib/portfolio-data"
 
 interface Repo {
   id: number
@@ -21,13 +22,14 @@ interface Commit {
 }
 
 export function GitHubRepos() {
+  const { t } = useLanguage()
   const [repos, setRepos] = useState<Repo[]>([])
   const [lastCommit, setLastCommit] = useState<Commit | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const GITHUB_USER = "pawituslugiprogramistyczne-hub"
-  const CONTRIBUTION_CHART_COLOR = "3b82f6" // Kolor niebieski z palety strony
+  const GITHUB_USER = profile.githubUser
+  const CONTRIBUTION_CHART_COLOR = "0891b2" // cyan-600, matches the site accent
 
   useEffect(() => {
     async function fetchData() {
@@ -72,90 +74,112 @@ export function GitHubRepos() {
     fetchData()
   }, [])
 
+  const divider = "divide-y divide-slate-200 border-t border-slate-200 dark:divide-white/10 dark:border-white/10"
+
+  // skeleton rows keep the exact shape of the loaded rows so nothing jumps
   const renderLoadingState = () => (
-    <div className="flex flex-wrap justify-center gap-8">
+    <ul className={divider} aria-hidden="true">
       {[...Array(3)].map((_, i) => (
-        <Card key={i} className="w-full max-w-sm flex flex-col justify-between">
-          <CardHeader>
-            <Skeleton className="h-6 w-3/4" />
-            <Skeleton className="h-4 w-full mt-2" />
-            <Skeleton className="h-4 w-5/6 mt-1" />
-          </CardHeader>
-          <CardContent>
-            <div className="flex justify-between items-center mb-4">
-              <div className="flex space-x-4">
-                <Skeleton className="h-5 w-10" />
-                <Skeleton className="h-5 w-10" />
-              </div>
-              <Skeleton className="h-5 w-20" />
-            </div>
-            <Skeleton className="h-10 w-full" />
-          </CardContent>
-        </Card>
+        <li key={i} className="grid gap-3 py-6 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-8">
+          <div>
+            <Skeleton className="h-6 w-48 bg-slate-200 dark:bg-white/10" />
+            <Skeleton className="mt-3 h-4 w-full max-w-md bg-slate-200 dark:bg-white/10" />
+          </div>
+          <Skeleton className="h-5 w-40 bg-slate-200 dark:bg-white/10" />
+        </li>
       ))}
-    </div>
+    </ul>
   )
 
   const renderContent = () => {
-    if (error) return <p className="text-center text-red-500 dark:text-red-400">Could not load repositories: {error}</p>
-    if (repos.length === 0 && !loading) return <p className="text-center text-slate-500">No public repositories found.</p>
+    if (error) {
+      return (
+        <p role="alert" className="border-t border-slate-200 pt-6 text-slate-600 dark:border-white/10 dark:text-slate-400">
+          {t("github.error")}: {error}
+        </p>
+      )
+    }
+    if (repos.length === 0) {
+      return (
+        <p className="border-t border-slate-200 pt-6 text-slate-600 dark:border-white/10 dark:text-slate-400">
+          {t("github.empty")}
+        </p>
+      )
+    }
 
     return (
-      <div className="flex flex-wrap justify-center gap-8">
+      <ul className={divider}>
         {repos.map((repo) => (
-          <Card key={repo.id} className="w-full max-w-sm flex flex-col justify-between bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm shadow-lg border-purple-200 dark:border-purple-700">
-            <CardHeader>
-              <CardTitle className="text-lg text-slate-900 dark:text-white">{repo.name}</CardTitle>
-              <CardDescription className="text-slate-600 dark:text-slate-300">{repo.description || "No description."}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex justify-between items-center text-sm text-slate-600 dark:text-slate-400 mb-4">
-                <div className="flex space-x-4">
-                  <div className="flex items-center"><Star className="w-4 h-4 mr-1" /> {repo.stargazers_count}</div>
-                  <div className="flex items-center"><GitFork className="w-4 h-4 mr-1" /> {repo.forks_count}</div>
-                </div>
-                {repo.language && <span className="font-medium">{repo.language}</span>}
+          <li key={repo.id}>
+            <a
+              href={repo.html_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group -mx-4 grid gap-3 rounded-xl px-4 py-6 transition-colors hover:bg-slate-900/[0.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand dark:hover:bg-white/[0.04] sm:grid-cols-[1fr_auto] sm:items-center sm:gap-8"
+            >
+              <div className="min-w-0">
+                <h3 className="flex items-center gap-2 text-xl font-medium tracking-tight text-slate-900 dark:text-slate-50">
+                  <span className="truncate">{repo.name}</span>
+                  <ArrowUpRight className="h-4 w-4 shrink-0 -translate-x-1 text-brand opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100" />
+                </h3>
+                {repo.description && (
+                  <p className="mt-1.5 max-w-[65ch] text-slate-600 dark:text-slate-400">{repo.description}</p>
+                )}
               </div>
-              <Button asChild variant="outline" className="w-full border-purple-300 text-purple-600 hover:bg-purple-50 dark:border-purple-600 dark:text-purple-400 dark:hover:bg-purple-950 bg-transparent">
-                <a href={repo.html_url} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="w-4 h-4 mr-2" /> View on GitHub
-                </a>
-              </Button>
-            </CardContent>
-          </Card>
+              <div className="flex items-center gap-5 font-mono text-sm tabular-nums text-slate-600 dark:text-slate-400">
+                {repo.language && <span className="text-slate-900 dark:text-slate-200">{repo.language}</span>}
+                <span className="inline-flex items-center gap-1.5">
+                  <Star className="h-4 w-4" aria-hidden="true" />
+                  {repo.stargazers_count}
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <GitFork className="h-4 w-4" aria-hidden="true" />
+                  {repo.forks_count}
+                </span>
+              </div>
+            </a>
+          </li>
         ))}
-      </div>
+      </ul>
     )
   }
 
   return (
-    <section id="github-activity">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 bg-clip-text text-transparent mb-4">
-          Recent GitHub Activity
-        </h2>
-        
-        {lastCommit && !loading && !error && (
-          <div className="text-center text-sm text-slate-600 dark:text-slate-400 mb-12 flex items-center justify-center gap-2">
-            <MessageSquare className="w-4 h-4" />
-            <p><strong>Last commit:</strong> "{lastCommit.message}"</p>
-          </div>
+    <section id="github-activity" className="py-24 md:py-32">
+      <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
+        <Reveal>
+          <h2 className="text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-50 md:text-5xl">
+            {t("github.title")}
+          </h2>
+          {lastCommit && !loading && !error && (
+            <p className="mt-5 flex max-w-full gap-2 font-mono text-sm text-slate-600 dark:text-slate-400">
+              <span className="shrink-0">{t("github.lastCommit")}:</span>
+              <span className="truncate text-slate-900 dark:text-slate-200">{lastCommit.message}</span>
+            </p>
+          )}
+        </Reveal>
+
+        <Reveal delay={100} className="mt-12">
+          {loading ? renderLoadingState() : renderContent()}
+        </Reveal>
+
+        {profile.showContributionGraph && (
+          <Reveal className="mt-20">
+            <h3 className="text-xl font-medium tracking-tight text-slate-900 dark:text-slate-50">
+              {t("github.graph")}
+            </h3>
+            {/* ghchart returns a light SVG; invert + hue-rotate keeps the cells readable on dark */}
+            <div className="mt-6 overflow-x-auto rounded-2xl border border-slate-200 bg-white p-4 dark:border-white/10 dark:bg-white/[0.03] md:p-6">
+              {/* min width keeps the cells legible on phones; the panel scrolls sideways instead */}
+              <img
+                src={`https://ghchart.rshah.org/${CONTRIBUTION_CHART_COLOR}/${GITHUB_USER}`}
+                alt={t("github.graphAlt")}
+                loading="lazy"
+                className="h-auto w-full min-w-[640px] dark:hue-rotate-180 dark:invert"
+              />
+            </div>
+          </Reveal>
         )}
-
-        {loading ? renderLoadingState() : renderContent()}
-
-        <div className="mt-16">
-          <h3 className="text-2xl font-bold text-center text-slate-700 dark:text-slate-300 mb-8">
-            Contribution Graph
-          </h3>
-          <div className="flex justify-center p-4 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-xl shadow-lg border border-purple-200 dark:border-purple-700">
-            <img 
-              src={`https://ghchart.rshah.org/${CONTRIBUTION_CHART_COLOR}/${GITHUB_USER}`} 
-              alt="GitHub Contribution Chart"
-              className="w-full"
-            />
-          </div>
-        </div>
       </div>
     </section>
   )

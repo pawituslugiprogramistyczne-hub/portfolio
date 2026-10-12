@@ -10,17 +10,22 @@ export function LanguageToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="w-9 px-0">
-          <Languages className="h-[1.2rem] w-[1.2rem]" />
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-9 gap-1.5 rounded-full px-3 text-slate-700 hover:bg-slate-900/5 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
+        >
+          <Languages className="h-[1.1rem] w-[1.1rem]" />
+          <span className="font-mono text-xs uppercase">{language}</span>
           <span className="sr-only">Toggle language</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setLanguage("en")} className={language === "en" ? "bg-accent" : ""}>
-          🇺🇸 English
+          English
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setLanguage("pl")} className={language === "pl" ? "bg-accent" : ""}>
-          🇵🇱 Polski
+          Polski
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

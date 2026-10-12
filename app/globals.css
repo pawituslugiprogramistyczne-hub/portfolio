@@ -43,6 +43,9 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+    /* portfolio accent: AA on slate-50 (6.3:1), white text on it passes AA */
+    --brand: 192 70% 29%;
+    --brand-foreground: 0 0% 100%;
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -84,6 +87,9 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    /* portfolio accent on slate-950 (9.9:1); dark text on it passes AA */
+    --brand: 187 70% 58%;
+    --brand-foreground: 200 40% 8%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -147,7 +153,21 @@
   * {
     @apply border-border;
   }
+  html {
+    /* keep anchor targets clear of the fixed 64px nav */
+    scroll-padding-top: 5rem;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
   body {
     @apply bg-background text-foreground;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
   }
 }

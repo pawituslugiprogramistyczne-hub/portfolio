@@ -4,22 +4,28 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
     darkMode: ["class"],
-   // ensure runtime-generated gradient classes and other dynamic classes are kept
-   safelist: [
-     { pattern: /^(from|via|to)-/ },
-     { pattern: /^bg-gradient-to-/ },
-     { pattern: /^text-/ },
-     { pattern: /^border-/ }
-   ],
+    // No safelist: every class in the codebase is a literal string the scanner finds.
+    // (The old /^text-/ /^border-/ /^(from|via|to)-/ safelist produced a 7.9 MB stylesheet.)
     content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./contexts/**/*.{js,ts,jsx,tsx,mdx}",
+    "./lib/**/*.{js,ts,jsx,tsx,mdx}",
     "*.{js,ts,jsx,tsx,mdx}"
   ],
   theme: {
   	extend: {
+  		fontFamily: {
+  			sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+  			mono: ['var(--font-mono)', 'ui-monospace', 'monospace']
+  		},
   		colors: {
+  			// portfolio accent (single hue, taken from the PawIT logo cyan)
+  			brand: {
+  				DEFAULT: 'hsl(var(--brand) / <alpha-value>)',
+  				foreground: 'hsl(var(--brand-foreground) / <alpha-value>)'
+  			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -104,11 +110,22 @@ const config: Config = {
   				to: {
   					height: '0'
   				}
+  			},
+  			'fade-up': {
+  				from: {
+  					opacity: '0',
+  					transform: 'translateY(14px)'
+  				},
+  				to: {
+  					opacity: '1',
+  					transform: 'translateY(0)'
+  				}
   			}
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+  			'fade-up': 'fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both'
   		}
   	}
   },
