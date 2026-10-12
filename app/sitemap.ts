@@ -6,6 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: `${profile.siteUrl}/`, changeFrequency: "monthly", priority: 1, alternates: { languages } },
     { url: `${profile.siteUrl}/pl`, changeFrequency: "monthly", priority: 1, alternates: { languages } },
+    { url: `${profile.siteUrl}/gpw`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${profile.siteUrl}/quiz-game`, changeFrequency: "yearly", priority: 0.4 },
   ]
 }

@@ -8,9 +8,9 @@ export const profile = {
   jobTitle: "Software Engineer",
   city: "Bydgoszcz",
   country: "PL",
-  email: "pawit.uslugiprogramistyczne@gmail.com",
-  /** Canonical address. Set NEXT_PUBLIC_SITE_URL in Vercel once a custom domain is live. */
-  siteUrl: (process.env.NEXT_PUBLIC_SITE_URL || "https://portfolio-red-nine-r65phxfzmr.vercel.app").replace(/\/$/, ""),
+  email: "pawel@pawit.net",
+  /** Canonical address (sitemap, canonical/hreflang links, share cards). NEXT_PUBLIC_SITE_URL overrides it, e.g. for previews. */
+  siteUrl: (process.env.NEXT_PUBLIC_SITE_URL || "https://pawit.net").replace(/\/$/, ""),
   githubUser: "pawituslugiprogramistyczne-hub",
   links: {
     github: "https://github.com/pawituslugiprogramistyczne-hub",
@@ -61,6 +61,16 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+  {
+    titleKey: "projects.gpw.title",
+    descriptionKey: "projects.gpw.description",
+    tech: ["Next.js", "TypeScript", "Route Handlers", "SVG charts"],
+    highlightKeys: ["projects.gpw.h1", "projects.gpw.h2", "projects.gpw.h3", "projects.gpw.h4"],
+    // code lives in this repo: app/gpw, app/api/gpw, components/gpw, lib/gpw
+    github: "https://github.com/pawituslugiprogramistyczne-hub/portfolio/tree/main/components/gpw",
+    live: "/gpw",
+    image: "/gpw-preview.webp",
+  },
   {
     titleKey: "projects.quizGame.title",
     descriptionKey: "projects.quizGame.description",
