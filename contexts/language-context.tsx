@@ -98,6 +98,7 @@ const translations = {
     // Projects Section
     "projects.title": "Side Projects",
     "projects.code": "Code",
+    "projects.demo": "Demo project",
     "projects.live": "Live demo",
     "projects.quizGame.title": "Quiz Game",
     "projects.quizGame.description":
@@ -116,7 +117,10 @@ const translations = {
 
     // GPW Explorer (/gpw)
     "gpw.back": "Portfolio",
-    "gpw.eyebrow": "Side project | Warsaw Stock Exchange",
+    "gpw.eyebrow": "Demo project | Warsaw Stock Exchange",
+    "gpw.demo.title": "Demo project, not a real investment service",
+    "gpw.demo.body":
+      "I built this to show my skills as a developer. It is not a product and not a tool for making investment decisions. Data comes from free public sources and can be delayed, incomplete or wrong. Nothing on this page is investment advice or a recommendation.",
     "gpw.title": "GPW Explorer",
     "gpw.intro":
       "Search Warsaw Stock Exchange companies and ETFs and see price, trend and risk at a glance: five years of daily data, compared with the WIG20.",
@@ -156,7 +160,7 @@ const translations = {
     "gpw.error.generic": "could not load data. Try again later.",
     "gpw.error.retry": "Try again",
     "gpw.footnote":
-      "Data: Yahoo Finance (unofficial public endpoint), may be delayed, cached for up to an hour. Prices in PLN; returns use dividend-adjusted closes. Index history is not available from this source, so WIG20 is represented by the Beta ETF WIG20TR (includes the fund's fees). For information only, not investment advice.",
+      "Portfolio demo project, not a real application. Data: Yahoo Finance (unofficial public endpoint), may be delayed, cached for up to an hour. Prices in PLN; returns use dividend-adjusted closes. Index history is not available from this source, so WIG20 is represented by the Beta ETF WIG20TR (includes the fund's fees). For information only, not investment advice.",
 
     // GPW Explorer: tabs, signals, news, peers, dividends, market overview
     "gpw.tabs.label": "GPW Explorer views",
@@ -339,6 +343,7 @@ const translations = {
     // Projects Section
     "projects.title": "Projekty poboczne",
     "projects.code": "Kod",
+    "projects.demo": "Projekt demonstracyjny",
     "projects.live": "Demo na żywo",
     "projects.quizGame.title": "Gra Quiz",
     "projects.quizGame.description":
@@ -357,7 +362,10 @@ const translations = {
 
     // GPW Explorer (/gpw)
     "gpw.back": "Portfolio",
-    "gpw.eyebrow": "Projekt poboczny | Giełda Papierów Wartościowych",
+    "gpw.eyebrow": "Projekt demonstracyjny | Giełda Papierów Wartościowych",
+    "gpw.demo.title": "Projekt demonstracyjny, a nie prawdziwy serwis inwestycyjny",
+    "gpw.demo.body":
+      "Zbudowałem go, żeby pokazać moje umiejętności programistyczne. To nie jest produkt ani narzędzie do podejmowania decyzji inwestycyjnych. Dane pochodzą z darmowych, publicznych źródeł i mogą być opóźnione, niepełne lub błędne. Nic na tej stronie nie jest poradą ani rekomendacją inwestycyjną.",
     "gpw.title": "GPW Explorer",
     "gpw.intro":
       "Wyszukaj spółkę lub ETF z warszawskiej giełdy i zobacz cenę, trend i ryzyko w jednym miejscu: pięć lat danych dziennych na tle WIG20.",
@@ -368,7 +376,7 @@ const translations = {
     "gpw.search.error": "Wyszukiwarka jest teraz niedostępna.",
     "gpw.popular": "Popularne:",
     "gpw.range": "Zakres czasu",
-    "gpw.ytd": "Od pocz. roku",
+    "gpw.ytd": "YTD",
     "gpw.stats.lastClose": "Ostatni kurs",
     "gpw.dataThrough": "Notowania do",
     "gpw.stats.vsPrevious": "względem poprzedniej sesji",
@@ -397,7 +405,7 @@ const translations = {
     "gpw.error.generic": "nie udało się wczytać danych. Spróbuj później.",
     "gpw.error.retry": "Spróbuj ponownie",
     "gpw.footnote":
-      "Dane: Yahoo Finance (nieoficjalny publiczny endpoint), mogą być opóźnione, cache do godziny. Ceny w PLN; stopy zwrotu liczone z cen skorygowanych o dywidendy. To źródło nie udostępnia historii indeksów, dlatego WIG20 reprezentuje Beta ETF WIG20TR (z uwzględnieniem kosztów funduszu). Wyłącznie w celach informacyjnych, nie stanowi rekomendacji inwestycyjnej.",
+      "Projekt demonstracyjny do portfolio, a nie prawdziwa aplikacja. Dane: Yahoo Finance (nieoficjalny publiczny endpoint), mogą być opóźnione, cache do godziny. Ceny w PLN; stopy zwrotu liczone z cen skorygowanych o dywidendy. To źródło nie udostępnia historii indeksów, dlatego WIG20 reprezentuje Beta ETF WIG20TR (z uwzględnieniem kosztów funduszu). Wyłącznie w celach informacyjnych, nie stanowi rekomendacji inwestycyjnej.",
 
     // GPW Explorer: tabs, signals, news, peers, dividends, market overview
     "gpw.tabs.label": "Widoki GPW Explorer",

@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 import { GpwPage } from "@/components/gpw/gpw-page"
 
-const title = "GPW Explorer - Warsaw Stock Exchange charts and risk metrics | Pawel Pokorski"
+const title = "GPW Explorer (demo project) - Warsaw Stock Exchange charts | Pawel Pokorski"
 const description =
-  "Search Warsaw Stock Exchange (GPW) stocks and ETFs: five years of prices, SMA 50/200, volatility, max drawdown and total return against WIG20."
+  "Portfolio demo project, not an investment service: search Warsaw Stock Exchange (GPW) stocks and ETFs, five years of prices, technical signals, news and a market overview."
 
 export const metadata: Metadata = {
   title,

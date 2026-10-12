@@ -58,6 +58,8 @@ export interface Project {
   live?: string
   /** preview image in /public, e.g. "/quiz-game-preview.webp" (16:10 works best) */
   image?: string
+  /** shows a "Demo project" label: a skills showcase, not a real product */
+  demo?: boolean
 }
 
 export const projects: Project[] = [
@@ -70,6 +72,7 @@ export const projects: Project[] = [
     github: "https://github.com/pawituslugiprogramistyczne-hub/portfolio/tree/main/components/gpw",
     live: "/gpw",
     image: "/gpw-preview.webp",
+    demo: true,
   },
   {
     titleKey: "projects.quizGame.title",

@@ -16,6 +16,7 @@ import {
   Globe,
   Workflow,
   Download,
+  FlaskConical,
   MapPin,
 } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -432,9 +433,17 @@ export function Portfolio() {
                   className={`grid gap-10 rounded-2xl border bg-white p-8 transition-colors duration-200 hover:border-brand/50 dark:bg-white/[0.03] md:p-10 lg:grid-cols-12 ${hairline}`}
                 >
                   <div className={project.image ? "lg:col-span-7" : "lg:col-span-12"}>
-                    <h3 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-50 md:text-3xl">
-                      {t(project.titleKey)}
-                    </h3>
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                      <h3 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-50 md:text-3xl">
+                        {t(project.titleKey)}
+                      </h3>
+                      {project.demo && (
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300 bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-900 dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-200">
+                          <FlaskConical className="h-3.5 w-3.5" aria-hidden="true" />
+                          {t("projects.demo")}
+                        </span>
+                      )}
+                    </div>
                     <p className={`mt-4 ${bodyClass}`}>{t(project.descriptionKey)}</p>
                     {project.highlightKeys.length > 0 && (
                       <ul className="mt-6 grid gap-x-10 gap-y-3 text-slate-700 dark:text-slate-300 md:grid-cols-2">
