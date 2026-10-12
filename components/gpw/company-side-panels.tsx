@@ -52,7 +52,7 @@ export function NewsPanel({ symbol, className = "" }: { symbol: string; classNam
                   <ExternalLink className="ml-1.5 inline h-3.5 w-3.5 align-[-2px] opacity-50" aria-hidden="true" />
                 </p>
                 <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                  {item.source} | <time dateTime={item.published}>{fmt.ago(item.published)}</time>
+                  {item.source} <span aria-hidden="true">·</span> <time dateTime={item.published}>{fmt.ago(item.published)}</time>
                 </p>
               </a>
             </li>
@@ -72,7 +72,7 @@ export function PeersPanel({ symbol, onSelect, className = "" }: { symbol: strin
   if (!sector || sector === "ETF") return null
 
   const peers = COMPANIES.filter((c) => c.sector === sector && c.symbol !== symbol)
-    .map((c) => ({ company: c, row: overview.status === "ready" ? overview.data.get(c.symbol) : undefined }))
+    .map((c) => ({ company: c, row: overview.status === "ready" ? overview.data.rows.get(c.symbol) : undefined }))
     .sort((a, b) => (b.row?.changeYtd ?? -Infinity) - (a.row?.changeYtd ?? -Infinity))
     .slice(0, 6)
   if (peers.length === 0) return null
@@ -88,7 +88,7 @@ export function PeersPanel({ symbol, onSelect, className = "" }: { symbol: strin
           <tr className="text-left text-xs text-slate-500 dark:text-slate-400">
             <th scope="col" className="pb-2 font-medium">{t("gpw.table.company")}</th>
             <th scope="col" className="pb-2 text-right font-medium">{t("gpw.table.today")}</th>
-            <th scope="col" className="pb-2 text-right font-medium">YTD</th>
+            <th scope="col" className="pb-2 text-right font-medium">{t("gpw.ytd")}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-200 dark:divide-white/10">

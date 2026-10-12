@@ -35,6 +35,9 @@ const MARGIN = { top: 12, right: 72, bottom: 28, left: 56 }
 const MARGIN_COMPACT = { top: 12, right: 52, bottom: 28, left: 38 }
 const VOLUME_HEIGHT = 56
 const VOLUME_GAP = 12
+const TOOLTIP_WIDTH = 200
+// below this the floating tooltip would cover most of the plot, so values move to a readout above it
+const COMPACT_WIDTH = 480
 
 function niceTicks(min: number, max: number, count = 5): number[] {
   const span = max - min || Math.abs(max) || 1
@@ -72,7 +75,8 @@ export function TimeSeriesChart({
     return () => observer.disconnect()
   }, [])
 
-  const margin = width > 0 && width < 480 ? MARGIN_COMPACT : MARGIN
+  const compact = width > 0 && width < COMPACT_WIDTH
+  const margin = compact ? MARGIN_COMPACT : MARGIN
   const n = dates.length
   const hasVolume = !!volumes && volumes.length === n
   const totalHeight = height + (hasVolume ? VOLUME_GAP + VOLUME_HEIGHT : 0) + margin.bottom
@@ -136,6 +140,16 @@ export function TimeSeriesChart({
     return { x, y, yTicks, paths, ends: collide ? [] : ends, xTicks, volumeMax, barWidth }
   }, [series, baseline, plotWidth, height, n, plotBottom, hasVolume, volumes, margin])
 
+  // touch has no hover, so the crosshair stays after the finger lifts until a tap elsewhere
+  useEffect(() => {
+    if (active == null) return
+    const dismiss = (event: globalThis.PointerEvent) => {
+      if (!containerRef.current?.contains(event.target as Node)) setActive(null)
+    }
+    document.addEventListener("pointerdown", dismiss)
+    return () => document.removeEventListener("pointerdown", dismiss)
+  }, [active])
+
   const indexFromPointer = (event: PointerEvent<SVGRectElement>) => {
     const rect = event.currentTarget.getBoundingClientRect()
     const ratio = (event.clientX - rect.left) / rect.width
@@ -160,20 +174,62 @@ export function TimeSeriesChart({
     }
   }
 
-  const tooltipLeft =
-    geometry && active != null ? (geometry.x(active) > width - 220 ? geometry.x(active) - 212 : geometry.x(active) + 12) : 0
+  // beside the crosshair, flipped near the right edge and always kept inside the chart
+  const tooltipLeft = (() => {
+    if (!geometry || active == null) return 0
+    const x = geometry.x(active)
+    const preferred = x + 12 + TOOLTIP_WIDTH > width ? x - 12 - TOOLTIP_WIDTH : x + 12
+    return Math.max(0, Math.min(width - TOOLTIP_WIDTH, preferred))
+  })()
+
+  // what the readout (compact) and the live region describe: the active session, else the latest
+  const shownIndex = active ?? n - 1
+  const readout =
+    n > 0
+      ? {
+          date: formatDate(dates[shownIndex], "tooltip"),
+          rows: [
+            ...series.flatMap((s) => {
+              const v = s.values[shownIndex]
+              return v == null ? [] : [{ id: s.id, label: s.label, value: formatValue(v), swatch: s.color, bar: false }]
+            }),
+            ...(hasVolume && formatVolume
+              ? [{ id: "volume", label: volumeLabel ?? "", value: formatVolume(volumes![shownIndex]), swatch: "var(--viz-volume)", bar: true }]
+              : []),
+          ],
+        }
+      : null
+  const legendSeries = series.filter((s) => s.values.some((v) => v != null))
 
   return (
     <div className="viz-root">
-      {series.length >= 2 && (
+      {legendSeries.length >= 2 && (
         <ul className="mb-3 flex flex-wrap gap-x-5 gap-y-1 text-sm text-slate-600 dark:text-slate-400">
-          {series.map((s) => (
+          {legendSeries.map((s) => (
             <li key={s.id} className="inline-flex items-center gap-2">
               <span aria-hidden="true" className="h-0.5 w-4 rounded-full" style={{ background: s.color }} />
               {s.label}
             </li>
           ))}
         </ul>
+      )}
+      {/* screen readers: the SVG is hidden, so arrow-key moves are announced from here */}
+      <p className="sr-only" aria-live="polite" aria-atomic="true">
+        {active != null && readout ? `${readout.date}: ${readout.rows.map((r) => `${r.label} ${r.value}`).join(", ")}` : ""}
+      </p>
+      {compact && readout && (
+        <div className="mb-2 min-h-[3.25rem] rounded-lg bg-slate-100 px-3 py-2 text-sm dark:bg-white/[0.06]" aria-hidden="true">
+          <p className="text-xs text-slate-600 dark:text-slate-400">{readout.date}</p>
+          <ul className="mt-0.5 flex flex-wrap gap-x-4 gap-y-0.5">
+            {readout.rows.map((r) => (
+              <li key={r.id} className="inline-flex items-center gap-1.5">
+                <span className={r.bar ? "h-2 w-3 shrink-0 rounded-sm" : "h-0.5 w-3 shrink-0 rounded-full"} style={{ background: r.swatch }} />
+                <span className="font-semibold tabular-nums text-slate-900 dark:text-slate-50">{r.value}</span>
+                <span className="text-slate-600 dark:text-slate-400">{r.label}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
       <div
         ref={containerRef}
@@ -193,7 +249,7 @@ export function TimeSeriesChart({
             {geometry.yTicks.map((t) => (
               <g key={t}>
                 <line x1={margin.left} x2={margin.left + plotWidth} y1={geometry.y(t)} y2={geometry.y(t)} stroke="var(--viz-grid)" strokeWidth={1} />
-                <text x={margin.left - 8} y={geometry.y(t)} dy="0.32em" textAnchor="end" className="fill-[var(--viz-muted)] text-[11px] tabular-nums">
+                <text x={margin.left - 8} y={geometry.y(t)} dy="0.32em" textAnchor="end" className="fill-[var(--viz-muted)] text-[12px] tabular-nums">
                   {formatTick(t)}
                 </text>
               </g>
@@ -232,7 +288,7 @@ export function TimeSeriesChart({
             {hasVolume && (
               <g>
                 {volumeLabel && (
-                  <text x={margin.left - 8} y={volumeTop + 8} textAnchor="end" className="fill-[var(--viz-muted)] text-[11px]">
+                  <text x={margin.left - 8} y={volumeTop + 8} textAnchor="end" className="fill-[var(--viz-muted)] text-[12px]">
                     {volumeLabel}
                   </text>
                 )}
@@ -268,7 +324,7 @@ export function TimeSeriesChart({
                 x={geometry.x(i)}
                 y={totalHeight - 8}
                 textAnchor={k === 0 ? "start" : k === geometry.xTicks.length - 1 ? "end" : "middle"}
-                className="fill-[var(--viz-muted)] text-[11px] tabular-nums"
+                className="fill-[var(--viz-muted)] text-[12px] tabular-nums"
               >
                 {formatDate(dates[i], "axis")}
               </text>
@@ -301,14 +357,17 @@ export function TimeSeriesChart({
               width={plotWidth}
               height={(hasVolume ? volumeTop + VOLUME_HEIGHT : plotBottom) - margin.top}
               fill="transparent"
+              // vertical swipes still scroll the page; horizontal drags scrub the crosshair
+              style={{ touchAction: "pan-y" }}
               onPointerMove={(e) => setActive(indexFromPointer(e))}
               onPointerDown={(e) => setActive(indexFromPointer(e))}
-              onPointerLeave={() => setActive(null)}
+              // touch fires pointerleave right after lifting the finger; only a mouse leaving clears it
+              onPointerLeave={(e) => e.pointerType === "mouse" && setActive(null)}
             />
           </svg>
         )}
 
-        {geometry && active != null && (
+        {geometry && active != null && !compact && (
           <div
             className="pointer-events-none absolute top-2 z-10 w-[200px] rounded-lg border border-slate-200 bg-white/95 p-3 text-sm shadow-lg backdrop-blur dark:border-white/10 dark:bg-slate-900/95"
             style={{ left: tooltipLeft }}

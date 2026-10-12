@@ -150,29 +150,36 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 /* Chart tokens for /gpw. Series slots are the dataviz reference palette in fixed order,
-   validated (CVD + contrast) against the white panel and the dark panel (#0a0f1e). */
+   validated (CVD + contrast) against the white panel and the dark panel (#0a0f1e).
+   Every mark here is >= 3:1 against its panel (WCAG 1.4.11), volume included at 70% opacity. */
 .viz-root {
   --viz-surface: #ffffff;
   --viz-series-1: #2a78d6;
   --viz-series-2: #eb6834;
-  --viz-series-3: #1baf7a;
+  --viz-series-3: #0d9467;
+  /* the comparison line (WIG20TR): neutral, so orange only ever means SMA 50 */
+  --viz-benchmark: #64748b;
   --viz-grid: #e2e8f0;
   --viz-axis: #cbd5e1;
   --viz-muted: #64748b;
-  --viz-volume: #94a3b8;
-  /* diverging pair for +/- values: slot-1 blue vs slot-8 red, zero stays a neutral hairline */
+  --viz-volume: #56657a;
+  /* up/down pair, matching the emerald/red used for changes in tables and tiles;
+     sign and bar side carry direction too, so color is never the only cue */
+  --viz-positive: #059669;
   --viz-negative: #e34948;
 }
 .dark .viz-root {
-  --viz-negative: #e66767;
   --viz-surface: #0a0f1e;
   --viz-series-1: #3987e5;
   --viz-series-2: #d95926;
   --viz-series-3: #199e70;
+  --viz-benchmark: #94a3b8;
   --viz-grid: rgba(255, 255, 255, 0.07);
   --viz-axis: rgba(255, 255, 255, 0.16);
   --viz-muted: #94a3b8;
-  --viz-volume: #475569;
+  --viz-volume: #7c8aa0;
+  --viz-positive: #10b981;
+  --viz-negative: #e66767;
 }
 
 @layer base {

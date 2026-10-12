@@ -20,6 +20,7 @@ export function useGpwFormat() {
     const dayMonth = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", timeZone: "UTC" })
     const monthYear = new Intl.DateTimeFormat(locale, { month: "short", year: "2-digit", timeZone: "UTC" })
     const full = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" })
+    const time = new Intl.DateTimeFormat(locale, { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw", timeZoneName: "short" })
     const relative = new Intl.RelativeTimeFormat(locale, { numeric: "auto" })
     const isoDate = (iso: string) => full.format(new Date(`${iso.slice(0, 10)}T00:00:00Z`))
     /** "3 hours ago" / "2 dni temu" for news timestamps */
@@ -32,7 +33,7 @@ export function useGpwFormat() {
       const days = Math.round(hours / 24)
       return Math.abs(days) < 14 ? relative.format(days, "day") : full.format(new Date(iso))
     }
-    return { locale, price, tick, pct, plainPct, whole, compact, integer, dayMonth, monthYear, full, isoDate, ago }
+    return { locale, price, tick, pct, plainPct, whole, compact, integer, dayMonth, monthYear, full, time, isoDate, ago }
   }, [language])
 }
 

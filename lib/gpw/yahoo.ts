@@ -170,9 +170,13 @@ export async function getOverview(symbols: string[]): Promise<OverviewRow[]> {
       const price = Number(s.fulldayPrice ?? closes[closes.length - 1])
       if (!Number.isFinite(price)) continue
       const base = Number(s.chartPreviousClose)
+      const times = ((s.timestamp as number[]) ?? []).filter(Number.isFinite)
+      const offset = Number(s.gmtoffset ?? 0)
       rows.push({
         symbol,
         price,
+        // Warsaw trading day of the latest bar, so the market view can say how fresh it is
+        session: times.length ? new Date((times[times.length - 1] + offset) * 1000).toISOString().slice(0, 10) : null,
         change1d: Number.isFinite(Number(s.fulldayChangePercent)) ? Number(s.fulldayChangePercent) : null,
         changeYtd: Number.isFinite(base) && base > 0 ? (price / base - 1) * 100 : null,
       })

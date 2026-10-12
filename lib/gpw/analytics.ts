@@ -121,12 +121,10 @@ export function rsi(values: number[], period = 14): number | null {
   return 100 - 100 / (1 + gain / loss)
 }
 
-export type SignalTone = "bullish" | "neutral" | "bearish"
 export type SignalId = "trend" | "cross" | "rsi" | "relative" | "high52"
 
 export interface Signal {
   id: SignalId
-  tone: SignalTone
   /** which sentence variant to show, e.g. "above" / "below" */
   variant: string
   /** values for the sentence's {placeholders}; numbers are formatted by the UI */
@@ -135,7 +133,8 @@ export interface Signal {
 
 /**
  * Five transparent, rule-based technical signals. Each rule is published next to its result
- * on the page. They describe the chart; they are not buy/sell recommendations.
+ * on the page. They describe the chart and carry no bullish/bearish verdict: buy/sell
+ * readings of Polish stocks are recommendations under MAR.
  */
 export function technicalSignals(points: PricePoint[], benchmark: PricePoint[] | null): Signal[] {
   const closes = points.map((p) => p.close)
@@ -151,7 +150,6 @@ export function technicalSignals(points: PricePoint[], benchmark: PricePoint[] |
     const pct = (last.close / s200 - 1) * 100
     signals.push({
       id: "trend",
-      tone: pct > 1 ? "bullish" : pct < -1 ? "bearish" : "neutral",
       variant: pct > 1 ? "above" : pct < -1 ? "below" : "at",
       vars: { pct: Math.abs(pct) },
     })
@@ -170,7 +168,7 @@ export function technicalSignals(points: PricePoint[], benchmark: PricePoint[] |
         break
       }
     }
-    signals.push({ id: "cross", tone: golden ? "bullish" : "bearish", variant: golden ? "golden" : "death", vars: { date: since } })
+    signals.push({ id: "cross", variant: golden ? "golden" : "death", vars: { date: since } })
   }
 
   // 3. momentum: 14-session RSI, classic 30/70 bands
@@ -178,7 +176,6 @@ export function technicalSignals(points: PricePoint[], benchmark: PricePoint[] |
   if (r != null) {
     signals.push({
       id: "rsi",
-      tone: r > 70 ? "bearish" : r < 30 ? "bullish" : "neutral",
       variant: r > 70 ? "overbought" : r < 30 ? "oversold" : "normal",
       vars: { value: r },
     })
@@ -193,7 +190,6 @@ export function technicalSignals(points: PricePoint[], benchmark: PricePoint[] |
       const diff = end.stock - end.benchmark
       signals.push({
         id: "relative",
-        tone: diff > 2 ? "bullish" : diff < -2 ? "bearish" : "neutral",
         variant: diff > 2 ? "beat" : diff < -2 ? "lagged" : "inline",
         vars: { pp: Math.abs(diff) },
       })
@@ -206,7 +202,6 @@ export function technicalSignals(points: PricePoint[], benchmark: PricePoint[] |
   const below = (1 - last.close / high) * 100
   signals.push({
     id: "high52",
-    tone: below <= 5 ? "bullish" : below >= 20 ? "bearish" : "neutral",
     variant: below <= 5 ? "near" : below >= 20 ? "far" : "mid",
     vars: { pct: below, high },
   })

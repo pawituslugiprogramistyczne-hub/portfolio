@@ -32,6 +32,8 @@ export interface History {
 export interface OverviewRow {
   symbol: string
   price: number
+  /** trading day of the latest price, "YYYY-MM-DD" (null when the source gives no timestamp) */
+  session: string | null
   /** today's change in % (live session, or the last session when the market is closed) */
   change1d: number | null
   /** change since the last close of the previous year, in % (price only) */

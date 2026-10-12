@@ -28,31 +28,44 @@ export function useJson<T>(url: string | null, pick: (json: Record<string, unkno
   return state
 }
 
-// one overview request per page view, shared by the company and market views
-let overviewRequest: Promise<OverviewRow[]> | null = null
+export interface Overview {
+  rows: Map<string, OverviewRow>
+  /** latest trading day across the rows, "YYYY-MM-DD" */
+  session: string | null
+  /** when the server fetched the data from the source (ISO) */
+  fetchedAt: string | null
+}
 
-export function useOverview(): Remote<Map<string, OverviewRow>> {
-  const [state, setState] = useState<Remote<Map<string, OverviewRow>>>({ status: "loading" })
+// one overview request per page view, shared by the company and market views
+let overviewRequest: Promise<Overview> | null = null
+
+export function useOverview(): Remote<Overview> & { retry: () => void } {
+  const [state, setState] = useState<Remote<Overview>>({ status: "loading" })
+  const [attempt, setAttempt] = useState(0)
   useEffect(() => {
     let active = true
+    setState({ status: "loading" })
     overviewRequest ??= fetch("/api/gpw/overview")
       .then(async (response) => {
         const json = await response.json()
         if (!response.ok) throw new Error(json?.error ?? "upstream-error")
-        return json.rows as OverviewRow[]
+        const rows = json.rows as OverviewRow[]
+        const session = rows.reduce<string | null>((latest, r) => (r.session && (!latest || r.session > latest) ? r.session : latest), null)
+        return { rows: new Map(rows.map((r) => [r.symbol, r])), session, fetchedAt: (json.fetchedAt as string) ?? null }
       })
       .catch((error) => {
-        overviewRequest = null // allow a retry on the next mount
+        overviewRequest = null // allow a retry
         throw error
       })
     overviewRequest
-      .then((rows) => active && setState({ status: "ready", data: new Map(rows.map((r) => [r.symbol, r])) }))
+      .then((data) => active && setState({ status: "ready", data }))
       .catch((error: Error) => active && setState({ status: "error", code: error.message }))
     return () => {
       active = false
     }
-  }, [])
-  return state
+  }, [attempt])
+  const retry = useCallback(() => setAttempt((a) => a + 1), [])
+  return { ...state, retry }
 }
 
 const WATCHLIST_KEY = "gpw-watchlist"

@@ -8,10 +8,13 @@ import { COMPANIES } from "@/lib/gpw/companies"
 import type { Announcement, OverviewRow, SearchResult } from "@/lib/gpw/types"
 import { Change, displayName, useGpwFormat, useSectorLabel } from "@/components/gpw/format"
 import { fill, useJson, useOverview, useWatchlist } from "@/components/gpw/use-gpw-data"
+import { Segmented } from "@/components/gpw/segmented"
 
 const panel = "rounded-2xl border border-slate-200 bg-white p-5 dark:border-white/10 dark:bg-white/[0.03] md:p-6"
 const heading = "text-lg font-semibold text-slate-900 dark:text-slate-50"
 const muted = "text-sm text-slate-600 dark:text-slate-400"
+// solid equivalent of the panel (white/3% over slate-950), so sticky table headers match it
+const stickyHead = "sticky top-0 bg-white dark:bg-[#0a0e1e]"
 
 type Metric = "change1d" | "changeYtd"
 type SortKey = "name" | Metric
@@ -19,7 +22,7 @@ type Joined = { company: SearchResult; row: OverviewRow }
 
 
 export function MarketOverview({ onSelect }: { onSelect: (symbol: string) => void }) {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const fmt = useGpwFormat()
   const sectorLabel = useSectorLabel()
   const overview = useOverview()
@@ -32,7 +35,7 @@ export function MarketOverview({ onSelect }: { onSelect: (symbol: string) => voi
   const joined: Joined[] = useMemo(() => {
     if (overview.status !== "ready") return []
     return COMPANIES.flatMap((company) => {
-      const row = overview.data.get(company.symbol)
+      const row = overview.data.rows.get(company.symbol)
       return row ? [{ company, row }] : []
     })
   }, [overview])
@@ -59,10 +62,10 @@ export function MarketOverview({ onSelect }: { onSelect: (symbol: string) => voi
     const dir = sort.desc ? -1 : 1
     return rows.sort((a, b) =>
       sort.key === "name"
-        ? dir * a.company.name.localeCompare(b.company.name)
+        ? dir * displayName(a.company.name, a.company.symbol).localeCompare(displayName(b.company.name, b.company.symbol), language)
         : dir * ((a.row[sort.key] ?? -Infinity) - (b.row[sort.key] ?? -Infinity)),
     )
-  }, [joined, sector, sort])
+  }, [joined, sector, sort, language])
 
   if (overview.status === "loading") {
     return (
@@ -77,9 +80,18 @@ export function MarketOverview({ onSelect }: { onSelect: (symbol: string) => voi
   }
   if (overview.status === "error") {
     return (
-      <p role="alert" className={`${panel} text-slate-700 dark:text-slate-300`}>
-        {overview.code === "rate-limited" ? t("gpw.error.rateLimitedFull") : t("gpw.market.error")}
-      </p>
+      <div role="alert" className={`${panel} flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between`}>
+        <p className="text-slate-700 dark:text-slate-300">
+          {overview.code === "rate-limited" ? t("gpw.error.rateLimitedFull") : t("gpw.market.error")}
+        </p>
+        <button
+          type="button"
+          onClick={overview.retry}
+          className="h-10 shrink-0 rounded-full border border-slate-300 px-5 text-sm font-medium hover:border-brand hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand dark:border-white/20"
+        >
+          {t("gpw.error.retry")}
+        </button>
+      </div>
     )
   }
 
@@ -120,14 +132,26 @@ export function MarketOverview({ onSelect }: { onSelect: (symbol: string) => voi
     </th>
   )
 
+  const { session, fetchedAt } = overview.data
+
   return (
     <div className="space-y-6">
+      <div>
+        <h2 className="sr-only">{t("gpw.tabs.market")}</h2>
+        {/* freshness first: "today" on a weekend means Friday, and the source can lag */}
+        <p className={muted}>
+          {fill(t("gpw.market.asOf"), {
+            session: session ? fmt.isoDate(session) : "-",
+            time: fetchedAt ? fmt.time.format(new Date(fetchedAt)) : "-",
+          })}
+        </p>
+      </div>
       <div className="grid gap-6 md:grid-cols-2">
         {moverList(t("gpw.market.gainers"), gainers)}
         {moverList(t("gpw.market.losers"), losers)}
       </div>
 
-      {/* sector performance: diverging bars around zero (blue up, red down), values printed beside them */}
+      {/* sector performance: diverging bars around zero (same up/down colors as the tables), values printed beside them */}
       <section className={`${panel} viz-root`} aria-labelledby="gpw-sectors-title">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
@@ -136,22 +160,15 @@ export function MarketOverview({ onSelect }: { onSelect: (symbol: string) => voi
             </h3>
             <p className={`mt-1 ${muted}`}>{t("gpw.market.sectorsSubtitle")}</p>
           </div>
-          <div role="radiogroup" aria-label={t("gpw.market.metric")} className="inline-flex rounded-full border border-slate-300 p-1 dark:border-white/15">
-            {(["change1d", "changeYtd"] as Metric[]).map((m) => (
-              <button
-                key={m}
-                type="button"
-                role="radio"
-                aria-checked={metric === m}
-                onClick={() => setMetric(m)}
-                className={`h-8 rounded-full px-3 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand ${
-                  metric === m ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900" : "text-slate-600 dark:text-slate-400"
-                }`}
-              >
-                {m === "change1d" ? t("gpw.table.today") : "YTD"}
-              </button>
-            ))}
-          </div>
+          <Segmented
+            label={t("gpw.market.metric")}
+            value={metric}
+            onChange={setMetric}
+            options={[
+              { value: "change1d", label: t("gpw.table.today") },
+              { value: "changeYtd", label: t("gpw.ytd") },
+            ]}
+          />
         </div>
         <ul className="mt-5 space-y-1">
           {sectors.map((s) => {
@@ -176,7 +193,7 @@ export function MarketOverview({ onSelect }: { onSelect: (symbol: string) => voi
                     <span className="absolute inset-y-[-4px] left-1/2 w-px bg-[var(--viz-axis)]" />
                     <span
                       className={`absolute inset-y-0 ${positive ? "left-1/2 rounded-r" : "right-1/2 rounded-l"}`}
-                      style={{ width, background: positive ? "var(--viz-series-1)" : "var(--viz-negative)" }}
+                      style={{ width, background: positive ? "var(--viz-positive)" : "var(--viz-negative)" }}
                     />
                   </span>
                   <span className="text-right text-sm font-medium tabular-nums text-slate-900 dark:text-slate-100">
@@ -203,7 +220,7 @@ export function MarketOverview({ onSelect }: { onSelect: (symbol: string) => voi
           </div>
           <div className="mt-4 max-h-[560px] overflow-auto">
             <table className="w-full text-sm">
-              <thead className="sticky top-0 bg-white text-left text-xs text-slate-500 dark:bg-[#0b1020] dark:text-slate-400">
+              <thead className={`${stickyHead} text-left text-xs text-slate-500 dark:text-slate-400`}>
                 <tr>
                   <th scope="col" className="w-8 pb-2">
                     <span className="sr-only">{t("gpw.watchlist.title")}</span>
@@ -211,7 +228,7 @@ export function MarketOverview({ onSelect }: { onSelect: (symbol: string) => voi
                   {sortButton("name", t("gpw.table.company"), "text-left")}
                   <th scope="col" className="pb-2 text-right font-medium">{t("gpw.table.price")}</th>
                   {sortButton("change1d", t("gpw.table.today"))}
-                  {sortButton("changeYtd", "YTD")}
+                  {sortButton("changeYtd", t("gpw.ytd"))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-white/5">
