@@ -42,6 +42,15 @@ A Polish-language "Milionerzy"-style birthday party quiz, not translated via the
 - Audio: `QuizScreen` plays `/open_music.m4a` (or a question's `music` file from `public/`), then switches to looping `/question_music.mp3`. `QuestionDisplay` runs the countdown timer (`timeLimit`, default 30s).
 - `app/quiz-game/groups/page.tsx` is a printable answer sheet for teams (one blank line per non-toast question), not a group selector.
 
+### 4. Holiday draw (`/losowanie`)
+A private, Polish-only gift draw for a group of friends, not translated via the language context, not in the sitemap and disallowed in `robots.ts`. It is unrelated to Ploofy and has its own Supabase project.
+- Data lives in Supabase (`losowanie_osoby`, `losowanie_wyniki`; schema in `supabase/migrations/`). RLS is on with no policies, so only the server reads it, through `lib/losowanie/db.ts` and the secret key. This repo is public: never commit names or results.
+- `lib/losowanie/draw.ts` holds the pure rules: nobody draws themselves, their partner, or their receivers from the two previous years. `ensureDraw` in `lib/losowanie/db.ts` draws the whole group at once on the first person's visit and writes it in one insert, which avoids the dead end of drawing names one by one.
+- `/api/losowanie/wynik` handles the person's view: a first visit needs the shared group code and saves the PIN they chose (scrypt, `lib/losowanie/pin.ts`), and 5 failures lock the person for 15 minutes. Nobody can trigger a draw without a valid code or PIN, so the group code goes out only once past results are complete.
+- `/losowanie/admin` calls `/api/losowanie/admin` for status, PIN resets and undoing this year's draw. The organizer takes part in the draw, so this route must only ever return status, never pairs.
+- `vercel.json` pings `/api/losowanie/ping` weekly so the free Supabase project does not get paused between holidays.
+- Env vars: `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `LOSOWANIE_KOD`, `LOSOWANIE_ADMIN_HASLO`.
+
 ### UI components
 `components/ui/` is shadcn/ui generated code (config in `components.json`, path alias `@/*`). Many of these files import packages that are **not** in `package.json` (e.g. `cmdk`, `recharts`, `vaul`, `sonner`, most `@radix-ui/*`); only a handful (button, card, badge, separator, skeleton, dropdown-menu) are actually used. Install the missing dependency before using any other ui component. `cn()` lives in `lib/utils.ts`.
 
